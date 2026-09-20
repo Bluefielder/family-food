@@ -69,7 +69,7 @@ export function KitchenBoard() {
               ))}
           </select>
         </div>
-        <button type="submit" className="mt-4 rounded-full bg-[var(--ink)] px-5 py-2 text-sm font-semibold text-[var(--paper)]">
+        <button type="submit" className="mt-4 min-h-12 rounded-full bg-[var(--ink)] px-5 py-2 text-sm font-semibold text-[var(--paper)]">
           {t.add}
         </button>
       </form>

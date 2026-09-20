@@ -27,7 +27,7 @@ export function MenuBoard({ highlightToday = false }: { highlightToday?: boolean
 
   return (
     <div>
-      <div className="flex gap-2 overflow-x-auto pb-2">
+      <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {week.map((d) => {
           const active = d.date === date;
           const label = new Date(`${d.date}T12:00:00`).toLocaleDateString(locale === "hr" ? "hr-HR" : "en-GB", {
@@ -40,7 +40,7 @@ export function MenuBoard({ highlightToday = false }: { highlightToday?: boolean
               key={d.date}
               type="button"
               onClick={() => setDate(d.date)}
-              className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium ${
+              className={`min-h-11 shrink-0 rounded-full px-4 py-2 text-sm font-medium ${
                 active ? "bg-white text-black" : "bg-black/40 text-white ring-1 ring-white/25"
               }`}
             >
@@ -107,7 +107,7 @@ function DishRow({ dish, date }: { dish: Dish; date: string }) {
             setFlash(true);
             setTimeout(() => setFlash(false), 900);
           }}
-          className="rounded-full bg-[var(--olive)] px-4 py-2 text-sm font-semibold text-white"
+          className="min-h-11 min-w-[7.5rem] rounded-full bg-[var(--olive)] px-4 py-2 text-sm font-semibold text-white"
         >
           {flash ? t.added : t.add}
         </button>
@@ -122,9 +122,9 @@ export function TodayPreview() {
   const stars = day.dishes.filter((d) => d.tags?.includes("home") || d.tags?.includes("popular")).slice(0, 4);
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16">
+    <section className="mx-auto max-w-6xl px-4 py-8 sm:py-16">
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">{t.today}</p>
-      <h2 className="mt-2 font-serif text-4xl text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)] sm:text-5xl">{t.plate}</h2>
+      <h2 className="mt-2 font-serif text-3xl text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)] sm:text-5xl">{t.plate}</h2>
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {stars.map((dish) => (
           <article key={dish.id} className="panel rounded-3xl p-5">
@@ -133,7 +133,7 @@ export function TodayPreview() {
               <span className="text-lg">{formatPrice(dish.price)}</span>
               <button
                 type="button"
-                className="rounded-full bg-[var(--terracotta)] px-4 py-2 text-sm font-semibold text-white"
+                className="min-h-11 rounded-full bg-[var(--terracotta)] px-4 py-2 text-sm font-semibold text-white"
                 onClick={() => add(day.date, dish)}
               >
                 {t.add}

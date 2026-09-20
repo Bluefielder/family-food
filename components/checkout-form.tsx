@@ -137,14 +137,15 @@ export function CheckoutForm() {
               <label className="mt-3 block text-sm">
                 {t.cardNumber}
                 <input
-                  className="mt-1 w-full rounded-lg bg-white/10 px-3 py-2 tracking-widest"
+                  className="mt-1 min-h-11 w-full rounded-lg bg-white/10 px-3 py-2 tracking-widest"
                   value={card}
                   onChange={(e) => setCard(e.target.value)}
+                  inputMode="numeric"
                 />
               </label>
               <div className="mt-3 grid grid-cols-2 gap-3">
-                <input className="rounded-lg bg-white/10 px-3 py-2" placeholder={t.expiry} defaultValue="12/28" />
-                <input className="rounded-lg bg-white/10 px-3 py-2" placeholder={t.cvc} defaultValue="123" />
+                <input className="min-h-11 rounded-lg bg-white/10 px-3 py-2" placeholder={t.expiry} defaultValue="12/28" />
+                <input className="min-h-11 rounded-lg bg-white/10 px-3 py-2" placeholder={t.cvc} defaultValue="123" />
               </div>
             </div>
           )}
@@ -154,7 +155,7 @@ export function CheckoutForm() {
         </fieldset>
       </div>
 
-      <aside className="h-fit rounded-3xl bg-black/40 p-6 ring-1 ring-white/15">
+      <aside className="h-fit rounded-3xl bg-black/40 p-6 ring-1 ring-white/15 max-lg:sticky max-lg:bottom-20 max-lg:z-20">
         <h2 className="font-serif text-2xl">{t.cart}</h2>
         <ul className="mt-4 space-y-3 text-sm">
           {items.map((i) => (
@@ -184,7 +185,7 @@ export function CheckoutForm() {
         <button
           type="submit"
           disabled={busy}
-          className="mt-6 w-full rounded-full bg-[var(--terracotta)] py-3 font-semibold text-white disabled:opacity-60"
+          className="mt-6 min-h-12 w-full rounded-full bg-[var(--terracotta)] py-3 font-semibold text-white disabled:opacity-60"
         >
           {busy ? t.processing : t.payNow}
         </button>

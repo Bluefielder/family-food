@@ -20,6 +20,13 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.png" },
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover" as const,
+  themeColor: "#120e0b",
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="hr" className={`${serif.variable} ${sans.variable} h-full antialiased`}>
