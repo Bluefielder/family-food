@@ -20,7 +20,7 @@ export function CheckoutForm() {
   const [error, setError] = useState("");
 
   if (items.length === 0) {
-    return <p className="text-[var(--ink-soft)]">{t.emptyCart}</p>;
+    return <p className="text-white/70">{t.emptyCart}</p>;
   }
 
   async function submit(e: React.FormEvent) {
@@ -59,7 +59,7 @@ export function CheckoutForm() {
       <div className="space-y-8">
         <fieldset className="space-y-3">
           <legend className="font-serif text-3xl">{t.delivery}</legend>
-          <label className="flex cursor-pointer gap-3 rounded-2xl bg-white/70 p-4 ring-1 ring-[var(--line)]">
+          <label className="flex cursor-pointer gap-3 rounded-2xl bg-black/30 p-4 ring-1 ring-white/15">
             <input
               type="radio"
               name="del"
@@ -70,7 +70,7 @@ export function CheckoutForm() {
               <strong className="block">{t.stop}</strong>
             </span>
           </label>
-          <label className="flex cursor-pointer gap-3 rounded-2xl bg-white/70 p-4 ring-1 ring-[var(--line)]">
+          <label className="flex cursor-pointer gap-3 rounded-2xl bg-black/30 p-4 ring-1 ring-white/15">
             <input
               type="radio"
               name="del"
@@ -85,7 +85,7 @@ export function CheckoutForm() {
             />
             <span>
               <strong className="block">{t.door}</strong>
-              <span className="text-sm text-[var(--ink-soft)]">{t.doorHint}</span>
+              <span className="text-sm text-white/70">{t.doorHint}</span>
             </span>
           </label>
           <label className="block text-sm font-medium">
@@ -126,7 +126,7 @@ export function CheckoutForm() {
         <fieldset className="space-y-3">
           <legend className="font-serif text-3xl">{t.pay}</legend>
           {(["card", "cash", "invoice"] as PayMethod[]).map((m) => (
-            <label key={m} className="flex cursor-pointer gap-3 rounded-2xl bg-white/70 p-4 ring-1 ring-[var(--line)]">
+            <label key={m} className="flex cursor-pointer gap-3 rounded-2xl bg-black/30 p-4 ring-1 ring-white/15">
               <input type="radio" name="pay" checked={pay === m} onChange={() => setPay(m)} />
               <span>{m === "card" ? t.payCard : m === "cash" ? t.payCash : t.payInvoice}</span>
             </label>
@@ -154,7 +154,7 @@ export function CheckoutForm() {
         </fieldset>
       </div>
 
-      <aside className="h-fit rounded-3xl bg-white/80 p-6 ring-1 ring-[var(--line)]">
+      <aside className="h-fit rounded-3xl bg-black/40 p-6 ring-1 ring-white/15">
         <h2 className="font-serif text-2xl">{t.cart}</h2>
         <ul className="mt-4 space-y-3 text-sm">
           {items.map((i) => (
@@ -167,7 +167,7 @@ export function CheckoutForm() {
           ))}
         </ul>
         {delivery && (
-          <p className="mt-4 text-sm text-[var(--ink-soft)]">
+          <p className="mt-4 text-sm text-white/70">
             {routeLabel(delivery.routeId, locale)}
             {delivery.type === "door" ? ` · ${t.door}` : ` · ${t.stop}`}
           </p>

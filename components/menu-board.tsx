@@ -41,7 +41,7 @@ export function MenuBoard({ highlightToday = false }: { highlightToday?: boolean
               type="button"
               onClick={() => setDate(d.date)}
               className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium ${
-                active ? "bg-[var(--ink)] text-[var(--paper)]" : "bg-white/70 text-[var(--ink)] ring-1 ring-[var(--line)]"
+                active ? "bg-white text-black" : "bg-black/40 text-white ring-1 ring-white/25"
               }`}
             >
               {label}
@@ -49,7 +49,7 @@ export function MenuBoard({ highlightToday = false }: { highlightToday?: boolean
           );
         })}
       </div>
-      <p className="mt-3 text-sm text-[var(--ink-soft)]">{t.cutoff}</p>
+      <p className="mt-3 text-sm text-white/70">{t.cutoff}</p>
       <div className="mt-8 space-y-10">
         {categories.map((c) => {
           const dishes = grouped.get(c.id) ?? [];
@@ -57,7 +57,7 @@ export function MenuBoard({ highlightToday = false }: { highlightToday?: boolean
           return (
             <section key={c.id}>
               <h3 className="font-serif text-3xl">{locale === "hr" ? c.hr : c.en}</h3>
-              <ul className="mt-4 divide-y divide-[var(--line)]">
+              <ul className="mt-4 divide-y divide-white/15">
                 {dishes.map((dish) => (
                   <DishRow key={dish.id} dish={dish} date={date} />
                 ))}
@@ -89,13 +89,13 @@ function DishRow({ dish, date }: { dish: Dish; date: string }) {
           {tags
             .filter((tag) => tag !== "popular")
             .map((tag) => (
-              <span key={tag} className="rounded-full bg-white px-2 py-0.5 text-[11px] text-[var(--ink-soft)] ring-1 ring-[var(--line)]">
+              <span key={tag} className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] text-white/75 ring-1 ring-white/20">
                 {tagLabel(tag, t)}
               </span>
             ))}
         </div>
         {(dish.noteHr || dish.noteEn) && (
-          <p className="mt-1 text-sm text-[var(--ink-soft)]">{locale === "hr" ? dish.noteHr : dish.noteEn}</p>
+          <p className="mt-1 text-sm text-white/65">{locale === "hr" ? dish.noteHr : dish.noteEn}</p>
         )}
       </div>
       <div className="flex items-center justify-between gap-4 sm:justify-end">
@@ -124,10 +124,10 @@ export function TodayPreview() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-16">
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">{t.today}</p>
-      <h2 className="mt-2 font-serif text-4xl sm:text-5xl">{t.plate}</h2>
+      <h2 className="mt-2 font-serif text-4xl text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)] sm:text-5xl">{t.plate}</h2>
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {stars.map((dish) => (
-          <article key={dish.id} className="rounded-3xl bg-white/70 p-5 ring-1 ring-[var(--line)]">
+          <article key={dish.id} className="panel rounded-3xl p-5">
             <p className="font-serif text-2xl">{locale === "hr" ? dish.hr : dish.en}</p>
             <div className="mt-4 flex items-center justify-between">
               <span className="text-lg">{formatPrice(dish.price)}</span>

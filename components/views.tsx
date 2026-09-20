@@ -17,20 +17,20 @@ export function HomeView() {
         <div className="relative z-10 mx-auto grid max-w-6xl items-end gap-10 px-4 py-16 sm:py-24 lg:grid-cols-[1.2fr_0.8fr]">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--gold)]">{t.heroKicker}</p>
-            <h1 className="mt-4 font-serif text-5xl leading-[1.05] sm:text-7xl">{t.heroTitle}</h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--ink-soft)]">{t.heroLead}</p>
+            <h1 className="mt-4 font-serif text-5xl leading-[1.05] text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.65)] sm:text-7xl">{t.heroTitle}</h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.7)]">{t.heroLead}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/jelovnik" className="rounded-full bg-[var(--terracotta)] px-6 py-3 font-semibold text-white">
                 {t.ctaOrder}
               </Link>
-              <Link href="/rute" className="rounded-full bg-white/80 px-6 py-3 font-semibold ring-1 ring-[var(--line)]">
+              <Link href="/rute" className="rounded-full bg-black/50 px-6 py-3 font-semibold text-white ring-1 ring-white/30 backdrop-blur">
                 {t.navRoutes}
               </Link>
             </div>
           </div>
           <div className="steam-card rounded-[2rem] p-6">
-            <p className="font-serif text-2xl">{t.tagline}</p>
-            <p className="mt-3 text-sm leading-6 text-[var(--ink-soft)]">{t.cutoff}</p>
+            <p className="font-serif text-2xl text-white">{t.tagline}</p>
+            <p className="mt-3 text-sm leading-6 text-white/75">{t.cutoff}</p>
             <div className="mt-6 grid grid-cols-3 gap-3 text-center">
               <Stat n="7–8 €" l={t.plate} />
               <Stat n="10" l={t.navRoutes} />
@@ -51,18 +51,18 @@ export function HomeView() {
 
 function Stat({ n, l }: { n: string; l: string }) {
   return (
-    <div className="rounded-2xl bg-[var(--paper)]/80 py-4">
-      <p className="font-serif text-xl">{n}</p>
-      <p className="mt-1 text-[11px] uppercase tracking-wide text-[var(--ink-soft)]">{l}</p>
+    <div className="rounded-2xl bg-black/35 py-4">
+      <p className="font-serif text-xl text-white">{n}</p>
+      <p className="mt-1 text-[11px] uppercase tracking-wide text-white/65">{l}</p>
     </div>
   );
 }
 
 function IdeaCard({ title, body, href }: { title: string; body: string; href: string }) {
   return (
-    <Link href={href} className="rounded-[1.75rem] bg-white/70 p-6 ring-1 ring-[var(--line)]">
-      <h3 className="font-serif text-2xl">{title}</h3>
-      <p className="mt-3 text-sm leading-6 text-[var(--ink-soft)]">{body}</p>
+    <Link href={href} className="panel rounded-[1.75rem] p-6">
+      <h3 className="font-serif text-2xl text-white">{title}</h3>
+      <p className="mt-3 text-sm leading-6 text-white/75">{body}</p>
     </Link>
   );
 }
@@ -72,8 +72,8 @@ export function MenuPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">{t.navMenu}</p>
-      <h1 className="mt-2 font-serif text-5xl">{t.ctaWeek}</h1>
-      <div className="mt-10">
+      <h1 className="mt-2 font-serif text-5xl text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)]">{t.ctaWeek}</h1>
+      <div className="panel mt-10 rounded-[2rem] p-6 sm:p-8">
         <MenuBoard highlightToday />
       </div>
     </div>
@@ -92,26 +92,26 @@ export function RoutesPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">{t.navRoutes}</p>
-      <h1 className="mt-2 max-w-3xl font-serif text-4xl sm:text-5xl">{t.routesTitle}</h1>
-      <p className="mt-4 max-w-2xl text-lg leading-8 text-[var(--ink-soft)]">{t.routesLead}</p>
-      <div className="mt-8 rounded-[2rem] bg-[var(--ink)] p-6 text-[var(--paper)] sm:p-8">
+      <h1 className="mt-2 max-w-3xl font-serif text-4xl text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)] sm:text-5xl">{t.routesTitle}</h1>
+      <p className="mt-4 max-w-2xl text-lg leading-8 text-white/90">{t.routesLead}</p>
+      <div className="panel mt-8 rounded-[2rem] p-6 sm:p-8">
         <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold)]">{t.woltNo}</p>
-        <p className="mt-3 max-w-2xl leading-7">{t.woltBody}</p>
+        <p className="mt-3 max-w-2xl leading-7 text-white/90">{t.woltBody}</p>
       </div>
       <div className="mt-12 space-y-10">
         {areas.map((area) => (
           <section key={area.id}>
-            <h2 className="font-serif text-3xl">{locale === "hr" ? area.hr : area.en}</h2>
+            <h2 className="font-serif text-3xl text-white">{locale === "hr" ? area.hr : area.en}</h2>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
               {routes
                 .filter((r) => r.area === area.id)
                 .map((r) => (
-                  <li key={r.id} className="rounded-2xl bg-white/70 p-5 ring-1 ring-[var(--line)]">
-                    <p className="font-medium">{locale === "hr" ? r.hr : r.en}</p>
+                  <li key={r.id} className="panel rounded-2xl p-5">
+                    <p className="font-medium text-white">{locale === "hr" ? r.hr : r.en}</p>
                     {(r.infoHr || r.infoEn) && (
-                      <p className="mt-1 text-sm text-[var(--ink-soft)]">{locale === "hr" ? r.infoHr : r.infoEn}</p>
+                      <p className="mt-1 text-sm text-white/70">{locale === "hr" ? r.infoHr : r.infoEn}</p>
                     )}
-                    <p className="mt-3 font-serif text-xl">{r.window}</p>
+                    <p className="mt-3 font-serif text-xl text-[var(--gold)]">{r.window}</p>
                   </li>
                 ))}
             </ul>
@@ -139,12 +139,14 @@ export function FamilyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">{t.navFamily}</p>
-      <h1 className="mt-3 font-serif text-5xl leading-tight">{t.familyTitle}</h1>
-      <p className="mt-6 text-lg leading-8 text-[var(--ink-soft)]">{t.familyLead}</p>
-      <div className="mt-10 space-y-4 text-base leading-8">
-        {paras.map((p) => (
-          <p key={p}>{p}</p>
-        ))}
+      <h1 className="mt-3 font-serif text-5xl leading-tight text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)]">{t.familyTitle}</h1>
+      <div className="panel mt-8 rounded-[2rem] p-8">
+        <p className="text-lg leading-8 text-white/90">{t.familyLead}</p>
+        <div className="mt-8 space-y-4 text-base leading-8 text-white/85">
+          {paras.map((p) => (
+            <p key={p}>{p}</p>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -154,9 +156,9 @@ export function CheckoutPage() {
   const { t } = useStore();
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
-      <h1 className="font-serif text-5xl">{t.checkout}</h1>
-      <p className="mt-2 text-sm text-[var(--ink-soft)]">{t.demoPay}</p>
-      <div className="mt-10">
+      <h1 className="font-serif text-5xl text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)]">{t.checkout}</h1>
+      <p className="mt-2 text-sm text-white/75">{t.demoPay}</p>
+      <div className="panel mt-10 rounded-[2rem] p-6 sm:p-8">
         <CheckoutForm />
       </div>
     </div>
@@ -172,13 +174,13 @@ export function ThanksPage() {
   return (
     <div className="mx-auto max-w-xl px-4 py-20 text-center">
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">{t.orderNo}</p>
-      <h1 className="mt-3 font-serif text-5xl">{t.thanks}</h1>
-      <p className="mt-4 text-lg text-[var(--ink-soft)]">{t.thanksLead}</p>
+      <h1 className="mt-3 font-serif text-5xl text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)]">{t.thanks}</h1>
+      <p className="mt-4 text-lg text-white/85">{t.thanksLead}</p>
       {order && (
-        <div className="mt-10 rounded-3xl bg-white/80 p-6 text-left ring-1 ring-[var(--line)]">
+        <div className="panel mt-10 rounded-3xl p-6 text-left">
           <p className="font-mono text-sm">{order.id}</p>
           <p className="mt-2">{order.name}</p>
-          <p className="text-sm text-[var(--ink-soft)]">
+          <p className="text-sm text-white/70">
             {routeLabel(order.delivery.routeId, locale)}
             {order.delivery.type === "door" ? ` · ${order.delivery.address}` : ""}
           </p>
@@ -205,8 +207,8 @@ export function KitchenPage() {
   const { t } = useStore();
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
-      <h1 className="font-serif text-5xl">{t.kitchenTitle}</h1>
-      <p className="mt-3 max-w-2xl text-[var(--ink-soft)]">{t.kitchenLead}</p>
+      <h1 className="font-serif text-5xl text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)]">{t.kitchenTitle}</h1>
+      <p className="mt-3 max-w-2xl text-white/85">{t.kitchenLead}</p>
       <div className="mt-10">
         <KitchenBoard />
       </div>
