@@ -137,6 +137,11 @@ h3 {
   backdrop-filter: blur(12px);
 }
 
+.dish-name {
+  font-stretch: condensed;
+  letter-spacing: -0.025em;
+}
+
 @media print {
   header,
   footer,

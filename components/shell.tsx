@@ -23,8 +23,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <FoodCollage />
       <header className="sticky top-0 z-40 border-b border-white/15 bg-black/55 backdrop-blur-md pt-[env(safe-area-inset-top)]">
         <div className="mx-auto flex max-w-6xl items-center gap-2 px-3 py-2 sm:gap-4 sm:px-4 sm:py-3">
-          <Link href="/" className="flex shrink-0 items-center rounded-lg bg-[#f4ead8] px-1.5 py-0.5 sm:rounded-xl sm:px-2 sm:py-1">
-            <Image src="/logo.png" alt="MP Stina" width={160} height={50} className="h-8 w-auto sm:h-10" priority />
+          <Link href="/" className="flex shrink-0 items-center">
+            <Image src="/logo-light.png" alt="MP Stina" width={160} height={50} className="h-8 w-auto sm:h-10" priority />
           </Link>
           <nav className="ml-auto hidden items-center gap-6 text-sm font-medium sm:flex">
             {links.map((l) => (

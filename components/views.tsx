@@ -70,10 +70,9 @@ function IdeaCard({ title, body, href }: { title: string; body: string; href: st
 export function MenuPage() {
   const { t } = useStore();
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 sm:py-12">
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">{t.navMenu}</p>
-      <h1 className="mt-2 font-serif text-4xl text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)] sm:text-5xl">{t.ctaWeek}</h1>
-      <div className="panel mt-6 rounded-[1.5rem] p-4 sm:mt-10 sm:rounded-[2rem] sm:p-8">
+    <div className="mx-auto max-w-4xl px-4 pt-4 pb-6 sm:pt-6 sm:pb-10">
+      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[var(--gold)] sm:text-base sm:tracking-[0.28em]">{t.navMenu}</p>
+      <div className="panel mt-3 rounded-[1.25rem] p-3 sm:mt-5 sm:rounded-[1.5rem] sm:p-6">
         <MenuBoard highlightToday />
       </div>
     </div>

@@ -114,7 +114,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (found) return prev.map((i) => (i.key === key ? { ...i, qty: i.qty + 1 } : i));
       return [...prev, { key, date, dish, qty: 1 }];
     });
-    setCartOpen(true);
   }, []);
 
   const setQty = useCallback((key: string, qty: number) => {

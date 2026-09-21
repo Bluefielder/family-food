@@ -358,7 +358,11 @@ export function shortDay(date: string, locale: "hr" | "en") {
   }).format(d);
 }
 
+export function todayISO() {
+  return new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Zagreb" });
+}
+
 export function todayMenu(): DayMenu {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayISO();
   return week.find((d) => d.date >= today) ?? week[0];
 }
