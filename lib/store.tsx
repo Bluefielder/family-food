@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { DOOR_FEE, routes, type Dish } from "./data";
+import { DOOR_FEE, menuForDate, routes, todayISO, type Dish } from "./data";
 import { DEMO_SEED_VERSION, buildDemoOrders, isDemoId } from "./demo-orders";
 import { copy, type Locale } from "./i18n";
 
@@ -64,6 +64,7 @@ type Store = {
   placeOrder: (input: Omit<KitchenOrder, "id" | "createdAt" | "status" | "items" | "serveDate"> & { items?: CartItem[]; serveDate?: string }) => KitchenOrder;
   updateOrder: (id: string, patch: Partial<KitchenOrder>) => void;
   resetDemo: () => void;
+  simulateIncoming: () => KitchenOrder;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -127,6 +128,30 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
   }, [orders, ready]);
 
+  useEffect(() => {
+    if (!ready) return;
+    const pull = () => {
+      try {
+        const raw = localStorage.getItem(ORDERS_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw) as KitchenOrder[];
+        setOrders((prev) => {
+          const a = prev.map((o) => `${o.id}:${o.status}`).join("|");
+          const b = parsed.map((o) => `${o.id}:${o.status}`).join("|");
+          return a === b ? prev : parsed;
+        });
+      } catch {
+        /* ignore */
+      }
+    };
+    const id = window.setInterval(pull, 1500);
+    window.addEventListener("storage", pull);
+    return () => {
+      window.clearInterval(id);
+      window.removeEventListener("storage", pull);
+    };
+  }, [ready]);
+
   const setLocale = useCallback((l: Locale) => {
     setLocaleState(l);
     localStorage.setItem(LANG_KEY, l);
@@ -175,7 +200,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         source: input.source,
       };
       setOrders((prev) => [order, ...prev]);
-      if (input.source === "web") clearCart();
+      if (input.source === "web" && !input.items) clearCart();
       return order;
     },
     [items, clearCart],
@@ -190,6 +215,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(SEED_KEY, DEMO_SEED_VERSION);
     setOrders([...buildDemoOrders(), ...live]);
   }, [orders]);
+
+  const simulateIncoming = useCallback(() => {
+    const day = todayISO();
+    const menu = menuForDate(day);
+    const dish = menu.dishes.find((d) => d.category === "mains") ?? menu.dishes[0];
+    const route = routes[Math.floor(Math.random() * routes.length)] ?? routes[0];
+    return placeOrder({
+      name: "Ana Kovač",
+      phone: "091 555 2291",
+      email: "ana.kovac@demo.hr",
+      note: "",
+      serveDate: day,
+      delivery: { type: "stop", routeId: route.id, address: "Korzo — točka" },
+      pay: "cash",
+      paid: false,
+      source: "web",
+      items: dish ? [{ key: `${day}:${dish.id}:${Date.now()}`, date: day, dish, qty: 1 }] : [],
+    });
+  }, [placeOrder]);
 
   const value = useMemo(
     () => ({
@@ -211,6 +255,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       placeOrder,
       updateOrder,
       resetDemo,
+      simulateIncoming,
     }),
     [
       locale,
@@ -228,6 +273,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       placeOrder,
       updateOrder,
       resetDemo,
+      simulateIncoming,
     ],
   );
 

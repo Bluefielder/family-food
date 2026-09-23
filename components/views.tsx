@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CheckoutForm } from "@/components/checkout-form";
+import { SignedIn } from "@/components/signed-in";
 import { DriverRun } from "@/components/driver-run";
 import { OfficeDesk } from "@/components/office-desk";
 import { KitchenDesk } from "@/components/kitchen-desk";
@@ -17,6 +18,9 @@ export function HomeView() {
       <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f0c94a]">{t.heroKicker}</p>
       <h1 className="mt-3 font-serif text-4xl leading-tight">{t.heroTitle}</h1>
       <p className="mt-4 text-base leading-7 text-white/70">{t.heroLead}</p>
+      <div className="mt-5">
+        <SignedIn />
+      </div>
       <Link
         href="/jelovnik"
         className="mt-6 grid min-h-12 place-items-center rounded-md bg-[#d85a38] text-[17px] font-semibold"
@@ -134,6 +138,10 @@ export function ThanksPage() {
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#f0c94a]">{t.orderNo}</p>
       <h1 className="mt-3 font-serif text-4xl">{t.thanks}</h1>
       <p className="mt-4 text-lg text-white/75">{t.thanksLead}</p>
+      <p className="mt-4 rounded-2xl bg-[#f0c94a] px-4 py-3 text-sm font-semibold text-[#1a1816]">
+        {t.emailKitchen}
+        <span className="mt-1 block text-xs font-normal opacity-80">{t.emailKitchenHint}</span>
+      </p>
       {order && (
         <div className="mt-10 rounded-3xl bg-black/40 p-6 text-left">
           <p className="font-mono text-sm">{order.id}</p>

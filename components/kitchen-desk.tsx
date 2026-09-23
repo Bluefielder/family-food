@@ -167,10 +167,14 @@ function RouteColumns({
               {t.packBy} {packBy(r)} · {t.vanGo} {vanLeaves(r)}
             </p>
             <ul className="mt-4 space-y-3">
-              {list.map((o) => (
-                <li key={o.id} className="rounded-xl bg-black/35 p-3">
+              {list.map((o) => {
+                const age = Date.now() - Date.parse(o.createdAt);
+                const justIn = age >= -5000 && age < 3 * 60 * 1000;
+                return (
+                <li key={o.id} className={`rounded-xl p-3 ${justIn ? "bg-[#f0c94a]/20 ring-2 ring-[#f0c94a]" : "bg-black/35"}`}>
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="font-semibold">
+                      {justIn ? `${t.justIn} · ` : ""}
                       {o.name} · {o.phone}
                     </p>
                     <StatusBadge status={o.status} />
@@ -206,7 +210,8 @@ function RouteColumns({
                     ))}
                   </div>
                 </li>
-              ))}
+                );
+              })}
             </ul>
           </section>
         );

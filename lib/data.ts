@@ -45,8 +45,8 @@ export const KEKS_FEE = 0.3;
 
 export const demoAccount = {
   name: "Luka Modrić",
-  phone: "091 310 2218",
-  email: "luka.modric@email.hr",
+  phone: "091 555 0184",
+  email: "luka.modric@demo.hr",
   address: "Korzo 12, Rijeka",
   routeId: "centar-1",
   keks: "KEKS Pay · Luka M. · **** 4812",

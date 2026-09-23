@@ -3,11 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { KitchenAlert, newOrderCount } from "@/components/kitchen-alert";
 import { formatPrice, week } from "@/lib/data";
 import { useStore } from "@/lib/store";
 
 export function Shell({ children }: { children: React.ReactNode }) {
-  const { t, locale, setLocale, items, setCartOpen, cartOpen } = useStore();
+  const { t, locale, setLocale, items, setCartOpen, cartOpen, orders } = useStore();
+  const incoming = newOrderCount(orders);
   const count = items.reduce((s, i) => s + i.qty, 0);
   const path = usePathname();
   const staffApp = path.startsWith("/kuhinja") || path.startsWith("/vozac") || path.startsWith("/ured");
@@ -31,10 +33,11 @@ export function Shell({ children }: { children: React.ReactNode }) {
               {locale === "hr" ? "HR" : "EN"}
             </button>
           </header>
+          <KitchenAlert />
           <main className="flex-1">{children}</main>
           <nav className="sticky bottom-0 z-40 grid grid-cols-3 border-t border-white/15 bg-[#141210] pb-[env(safe-area-inset-bottom)]">
             <StaffTab href="/ured" label={t.staffOffice} active={path.startsWith("/ured")} />
-            <StaffTab href="/kuhinja" label={t.staffKitchen} active={path.startsWith("/kuhinja")} />
+            <StaffTab href="/kuhinja" label={t.staffKitchen} active={path.startsWith("/kuhinja")} badge={incoming} />
             <StaffTab href="/vozac" label={t.staffDriver} active={path.startsWith("/vozac")} />
           </nav>
         </div>
@@ -88,15 +91,20 @@ export function Shell({ children }: { children: React.ReactNode }) {
   );
 }
 
-function StaffTab({ href, label, active }: { href: string; label: string; active: boolean }) {
+function StaffTab({ href, label, active, badge = 0 }: { href: string; label: string; active: boolean; badge?: number }) {
   return (
     <Link
       href={href}
-      className={`flex min-h-14 items-center justify-center px-1 text-center text-[12px] font-semibold ${
+      className={`relative flex min-h-14 items-center justify-center px-1 text-center text-[12px] font-semibold ${
         active ? "text-[#f0c94a]" : "text-white/75"
       }`}
     >
       {label}
+      {badge > 0 && (
+        <span className="absolute right-2 top-2 grid h-5 min-w-5 place-items-center rounded-full bg-[#f0c94a] px-1 text-[10px] text-black">
+          {badge}
+        </span>
+      )}
     </Link>
   );
 }

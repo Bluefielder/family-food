@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useMemo, useState } from "react";
+import { SignedIn } from "@/components/signed-in";
 import { bannerSrc, menuForDate, nextWeekdays, todayISO, todayMenu, type Category, type Dish } from "@/lib/data";
 import { type Locale } from "@/lib/i18n";
 import { useStore } from "@/lib/store";
@@ -63,6 +64,9 @@ export function MenuApp() {
               {locale === "hr" ? "HR" : "ENG"}
             </button>
           </div>
+        </div>
+        <div className="bg-black px-3 pb-2">
+          <SignedIn />
         </div>
         <div className="grid grid-cols-6 gap-1.5 bg-black px-2 py-2">
           {days.map((d) => {

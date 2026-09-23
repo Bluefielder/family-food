@@ -9,7 +9,7 @@ import { isAfternoon, orderPlates, orderTotal, serveDateOf } from "@/lib/ops";
 import { useStore } from "@/lib/store";
 
 export function OfficeDesk() {
-  const { t, locale, orders, resetDemo } = useStore();
+  const { t, locale, orders, resetDemo, simulateIncoming } = useStore();
   const [day, setDay] = useState<string>(() => {
     const today = todayISO();
     return (DEMO_DAYS as readonly string[]).includes(today) ? today : DEMO_DAYS[1];
@@ -63,6 +63,18 @@ export function OfficeDesk() {
         <Link href="/vozac" className="grid min-h-12 min-w-40 place-items-center rounded-md bg-[#f0c94a] px-4 font-semibold text-[#1a1816]">
           {t.staffDriver}
         </Link>
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof Notification !== "undefined" && Notification.permission === "default") {
+              void Notification.requestPermission();
+            }
+            simulateIncoming();
+          }}
+          className="min-h-12 w-full rounded-md bg-[#f0c94a] px-4 text-sm font-semibold text-[#1a1816]"
+        >
+          {t.simOrder}
+        </button>
         <button type="button" onClick={resetDemo} className="min-h-12 rounded-md bg-white/10 px-4 text-sm font-semibold">
           {t.resetDemo}
         </button>
