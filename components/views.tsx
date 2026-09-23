@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CheckoutForm } from "@/components/checkout-form";
 import { KitchenBoard } from "@/components/kitchen-board";
+import { MenuApp } from "@/components/menu-app";
 import { MenuBoard, TodayPreview } from "@/components/menu-board";
 import { formatPrice, routes } from "@/lib/data";
 import { routeLabel, useStore } from "@/lib/store";
@@ -68,15 +69,7 @@ function IdeaCard({ title, body, href }: { title: string; body: string; href: st
 }
 
 export function MenuPage() {
-  const { t } = useStore();
-  return (
-    <div className="mx-auto max-w-4xl px-4 pt-4 pb-6 sm:pt-6 sm:pb-10">
-      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[var(--gold)] sm:text-base sm:tracking-[0.28em]">{t.navMenu}</p>
-      <div className="panel mt-3 rounded-[1.25rem] p-3 sm:mt-5 sm:rounded-[1.5rem] sm:p-6">
-        <MenuBoard highlightToday />
-      </div>
-    </div>
-  );
+  return <MenuApp />;
 }
 
 export function RoutesPage() {

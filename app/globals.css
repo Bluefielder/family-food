@@ -20,6 +20,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans), "Source Sans 3", sans-serif;
   --font-serif: var(--font-serif), Fraunces, serif;
+  --font-oswald: var(--font-oswald), Oswald, sans-serif;
 }
 
 html,
@@ -138,8 +139,12 @@ h3 {
 }
 
 .dish-name {
-  font-stretch: condensed;
-  letter-spacing: -0.025em;
+  font-family: var(--font-oswald), Oswald, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media print {

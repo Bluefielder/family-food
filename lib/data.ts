@@ -366,3 +366,44 @@ export function todayMenu(): DayMenu {
   const today = todayISO();
   return week.find((d) => d.date >= today) ?? week[0];
 }
+
+export const bannerDayKey: Record<string, string> = {
+  "2026-09-21": "mon",
+  "2026-09-22": "tue",
+  "2026-09-23": "wed",
+  "2026-09-24": "thu",
+  "2026-09-25": "fri",
+  "2026-09-28": "mon2",
+};
+
+export function bannerSrc(date: string, category: Category) {
+  if (bannerDayKey[date]) return `/banners/banner-${bannerDayKey[date]}-${category}.png`;
+  const dow = new Date(`${date}T12:00:00`).getDay();
+  const same = week.find((d) => new Date(`${d.date}T12:00:00`).getDay() === dow);
+  const key = (same && bannerDayKey[same.date]) || "mon";
+  return `/banners/banner-${key}-${category}.png`;
+}
+
+export function nextWeekdays(from: string, count: number) {
+  const out: string[] = [];
+  const d = new Date(`${from}T12:00:00`);
+  while (out.length < count) {
+    const dow = d.getDay();
+    if (dow !== 0 && dow !== 6) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      out.push(`${y}-${m}-${day}`);
+    }
+    d.setDate(d.getDate() + 1);
+  }
+  return out;
+}
+
+export function menuForDate(date: string): DayMenu {
+  const exact = week.find((d) => d.date === date);
+  if (exact) return exact;
+  const dow = new Date(`${date}T12:00:00`).getDay();
+  const same = [...week].reverse().find((d) => new Date(`${d.date}T12:00:00`).getDay() === dow);
+  return { date, dishes: same?.dishes ?? [] };
+}

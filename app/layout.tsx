@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Source_Sans_3 } from "next/font/google";
+import { Fraunces, Oswald, Source_Sans_3 } from "next/font/google";
 import { Shell } from "@/components/shell";
 import { StoreProvider } from "@/lib/store";
 import "./globals.css";
@@ -12,6 +12,12 @@ const serif = Fraunces({
 const sans = Source_Sans_3({
   variable: "--font-sans",
   subsets: ["latin", "latin-ext"],
+});
+
+const oswald = Oswald({
+  variable: "--font-oswald",
+  subsets: ["latin", "latin-ext"],
+  weight: ["300", "400"],
 });
 
 export const metadata: Metadata = {
@@ -29,7 +35,7 @@ export const viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="hr" className={`${serif.variable} ${sans.variable} h-full antialiased`}>
+    <html lang="hr" className={`${serif.variable} ${sans.variable} ${oswald.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
         <StoreProvider>
           <Shell>{children}</Shell>

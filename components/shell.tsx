@@ -18,6 +18,34 @@ export function Shell({ children }: { children: React.ReactNode }) {
     { href: "/kuca", label: t.navFamily },
   ];
 
+  if (path.startsWith("/jelovnik")) {
+    return (
+      <div className="min-h-dvh bg-[#3E3A37] text-white">
+        <main>{children}</main>
+        <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto grid max-w-[430px] grid-cols-5 border-t border-white/15 bg-black pb-[env(safe-area-inset-bottom)]">
+          <Tab href="/" label={t.brand} active={false} icon="home" />
+          <Tab href="/jelovnik" label={t.navMenu} active icon="menu" />
+          <Tab href="/rute" label={t.navRoutes} active={false} icon="routes" />
+          <Tab href="/kuca" label={t.navFamily} active={false} icon="house" />
+          <button
+            type="button"
+            onClick={() => setCartOpen(true)}
+            className="relative flex min-h-14 flex-col items-center justify-center gap-0.5 px-1 text-[10px] font-semibold text-white/80"
+          >
+            <TabIcon name="cart" />
+            {t.cart}
+            {count > 0 && (
+              <span className="absolute right-1.5 top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-[#f0c94a] px-1 text-[10px] text-black">
+                {count}
+              </span>
+            )}
+          </button>
+        </nav>
+        {cartOpen && <CartDrawer />}
+      </div>
+    );
+  }
+
   return (
     <div className="relative z-10 min-h-full flex flex-col">
       <FoodCollage />
