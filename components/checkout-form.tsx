@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { RouteMapSheet } from "@/components/route-map";
+import { SignedIn } from "@/components/signed-in";
 import { KEKS_FEE, demoAccount, formatPrice, routeAreas, routes } from "@/lib/data";
 import { routeLabel, useStore, type PayMethod } from "@/lib/store";
 
@@ -32,7 +33,12 @@ export function CheckoutForm() {
   const usual = routes.find((r) => r.id === demoAccount.routeId);
 
   if (items.length === 0) {
-    return <p className="text-white/70">{t.emptyCart}</p>;
+    return (
+      <div className="space-y-4">
+        <SignedIn />
+        <p className="text-white/70">{t.emptyCart}</p>
+      </div>
+    );
   }
 
   async function submit(e: React.FormEvent) {
@@ -76,9 +82,10 @@ export function CheckoutForm() {
       <fieldset className="space-y-2">
         <legend className="font-serif text-2xl text-white">{t.account}</legend>
         <p className="text-xs text-white/50">{t.demoPay}</p>
+        <SignedIn />
         <label className="block text-sm text-white/70">
           {t.name}
-          <input className="field mt-1" value={name} onChange={(e) => setName(e.target.value)} />
+          <input className="field mt-1" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
         </label>
         <label className="block text-sm text-white/70">
           {t.phone}
