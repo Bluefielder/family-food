@@ -1,12 +1,10 @@
-# MP Stina — Family food
+# MP Stina
 
-Demo site for [MP Stina](https://mpstina.hr/) in Rijeka: family lunch, tap-to-order, Croatian first with English.
+Phone demo for the Šmrika kitchen. Croatian first, English on the HR/EN toggle.
 
-This is a prototype for the kitchen. Card checkout is fake and does not charge anyone.
+## Two apps
 
-```bash
-npm install
-npm run dev
-```
+- **Customers:** https://mp-stina.vercel.app/
+- **Office / kitchen / driver:** https://mp-stina.vercel.app/ured
 
-Open [http://localhost:3000](http://localhost:3000).
+Local: `npm run dev` then the same paths on port 3000 (or 3003).

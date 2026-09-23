@@ -16,96 +16,172 @@ export type DayMenu = {
   dishes: Dish[];
 };
 
+export type RouteArea = "centar" | "zapad" | "istok" | "okolica";
+
 export type RouteStop = {
   id: string;
+  code: string;
   hr: string;
   en: string;
   infoHr?: string;
   infoEn?: string;
   window: string;
-  area: "centar" | "zapad" | "istok" | "okolica";
+  area: RouteArea;
+  lat: number;
+  lng: number;
+  mapX: number;
+  mapY: number;
 };
 
+export const routeAreas: { id: RouteArea; hr: string; en: string }[] = [
+  { id: "centar", hr: "Centar", en: "Centre" },
+  { id: "zapad", hr: "Zapad", en: "West" },
+  { id: "istok", hr: "Istok", en: "East" },
+  { id: "okolica", hr: "Okolica", en: "Around Rijeka" },
+];
+
 export const DOOR_FEE = 1.5;
+export const KEKS_FEE = 0.3;
+
+export const demoAccount = {
+  name: "Luka Modrić",
+  phone: "091 310 2218",
+  email: "luka.modric@email.hr",
+  address: "Korzo 12, Rijeka",
+  routeId: "centar-1",
+  keks: "KEKS Pay · Luka M. · **** 4812",
+};
 
 export const routes: RouteStop[] = [
   {
     id: "centar-1",
-    hr: "Rijeka – centar 1",
-    en: "Rijeka – centre 1",
+    code: "C1",
+    hr: "Rijeka – centar – 1",
+    en: "Rijeka – centre – 1",
     window: "10:00 – 11:00",
     area: "centar",
+    lat: 45.3271,
+    lng: 14.4422,
+    mapX: 142,
+    mapY: 88,
   },
   {
     id: "centar-2",
-    hr: "Rijeka – centar 2",
-    en: "Rijeka – centre 2",
+    code: "C2",
+    hr: "Rijeka – centar – 2",
+    en: "Rijeka – centre – 2",
     window: "12:30 – 13:30",
     area: "centar",
+    lat: 45.3284,
+    lng: 14.4378,
+    mapX: 158,
+    mapY: 102,
   },
   {
     id: "zapad-1",
-    hr: "Rijeka – zapad 1",
-    en: "Rijeka – west 1",
+    code: "Z1",
+    hr: "Rijeka – zapad – 1",
+    en: "Rijeka – west – 1",
     infoHr: "Turnić, Krnjevo, Zamet, Kantrida",
     infoEn: "Turnić, Krnjevo, Zamet, Kantrida",
     window: "10:45 – 11:45",
     area: "zapad",
+    lat: 45.337,
+    lng: 14.405,
+    mapX: 62,
+    mapY: 78,
   },
   {
     id: "zapad-2",
-    hr: "Rijeka – zapad 2",
-    en: "Rijeka – west 2",
+    code: "Z2",
+    hr: "Rijeka – zapad – 2",
+    en: "Rijeka – west – 2",
     infoHr: "Škurinje, Martinkovac, Srdoči",
     infoEn: "Škurinje, Martinkovac, Srdoči",
     window: "11:00 – 12:00",
     area: "zapad",
+    lat: 45.347,
+    lng: 14.418,
+    mapX: 78,
+    mapY: 48,
   },
   {
     id: "istok-1",
-    hr: "Rijeka – istok 1",
-    en: "Rijeka – east 1",
+    code: "I1",
+    hr: "Rijeka – istok – 1",
+    en: "Rijeka – east – 1",
     infoHr: "Pećine, Vežica, Sušak",
     infoEn: "Pećine, Vežica, Sušak",
     window: "10:30 – 11:30",
     area: "istok",
+    lat: 45.324,
+    lng: 14.462,
+    mapX: 208,
+    mapY: 96,
   },
   {
     id: "istok-2",
-    hr: "Rijeka – istok 2",
-    en: "Rijeka – east 2",
+    code: "I2",
+    hr: "Rijeka – istok – 2",
+    en: "Rijeka – east – 2",
     infoHr: "Pećine, Vežica, Sušak",
     infoEn: "Pećine, Vežica, Sušak",
     window: "13:00 – 14:00",
     area: "istok",
+    lat: 45.327,
+    lng: 14.47,
+    mapX: 228,
+    mapY: 78,
   },
   {
     id: "kukuljanovo-1",
-    hr: "Kukuljanovo 1",
-    en: "Kukuljanovo 1",
+    code: "K1",
+    hr: "Kukuljanovo – 1",
+    en: "Kukuljanovo – 1",
     window: "09:30 – 10:30",
     area: "okolica",
+    lat: 45.33,
+    lng: 14.528,
+    mapX: 278,
+    mapY: 70,
   },
   {
     id: "kukuljanovo-2",
-    hr: "Kukuljanovo 2",
-    en: "Kukuljanovo 2",
+    code: "K2",
+    hr: "Kukuljanovo – 2",
+    en: "Kukuljanovo – 2",
     window: "11:30 – 12:30",
     area: "okolica",
+    lat: 45.332,
+    lng: 14.535,
+    mapX: 292,
+    mapY: 92,
   },
   {
     id: "kostrena",
+    code: "KO",
     hr: "Kostrena",
     en: "Kostrena",
     window: "11:15 – 11:45",
     area: "okolica",
+    lat: 45.307,
+    lng: 14.506,
+    mapX: 236,
+    mapY: 148,
   },
   {
     id: "ina",
+    code: "IN",
     hr: "INA",
     en: "INA",
+    infoHr: "Urinj / industrijska zona",
+    infoEn: "Urinj / industrial zone",
     window: "12:00 – 12:30",
     area: "okolica",
+    lat: 45.292,
+    lng: 14.52,
+    mapX: 258,
+    mapY: 172,
   },
 ];
 

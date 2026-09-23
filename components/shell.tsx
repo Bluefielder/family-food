@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FoodCollage } from "@/components/food-collage";
 import { formatPrice, week } from "@/lib/data";
 import { useStore } from "@/lib/store";
 
@@ -11,26 +10,68 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const { t, locale, setLocale, items, setCartOpen, cartOpen } = useStore();
   const count = items.reduce((s, i) => s + i.qty, 0);
   const path = usePathname();
+  const staffApp = path.startsWith("/kuhinja") || path.startsWith("/vozac") || path.startsWith("/ured");
+  const menuScreen = path.startsWith("/jelovnik");
 
-  const links = [
-    { href: "/jelovnik", label: t.navMenu },
-    { href: "/rute", label: t.navRoutes },
-    { href: "/kuca", label: t.navFamily },
-  ];
-
-  if (path.startsWith("/jelovnik")) {
+  if (staffApp) {
     return (
-      <div className="min-h-dvh bg-[#3E3A37] text-white">
-        <main>{children}</main>
-        <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto grid max-w-[430px] grid-cols-5 border-t border-white/15 bg-black pb-[env(safe-area-inset-bottom)]">
-          <Tab href="/" label={t.brand} active={false} icon="home" />
-          <Tab href="/jelovnik" label={t.navMenu} active icon="menu" />
-          <Tab href="/rute" label={t.navRoutes} active={false} icon="routes" />
-          <Tab href="/kuca" label={t.navFamily} active={false} icon="house" />
+      <div className="min-h-dvh bg-black text-white">
+        <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-[#1c1a18]">
+          <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-white/10 bg-[#1c1a18] px-4 py-3">
+            <Link href="/ured" className="font-serif text-xl">
+              {t.brand}
+            </Link>
+            <span className="text-[11px] uppercase tracking-widest text-white/40">{t.staffHome}</span>
+            <button
+              type="button"
+              onClick={() => setLocale(locale === "hr" ? "en" : "hr")}
+              className="ml-auto min-h-11 rounded-full border border-white/25 px-3 text-xs font-semibold"
+              aria-label={locale === "hr" ? t.switchToEn : t.switchToHr}
+            >
+              {locale === "hr" ? "HR" : "EN"}
+            </button>
+          </header>
+          <main className="flex-1">{children}</main>
+          <nav className="sticky bottom-0 z-40 grid grid-cols-3 border-t border-white/15 bg-[#141210] pb-[env(safe-area-inset-bottom)]">
+            <StaffTab href="/ured" label={t.staffOffice} active={path.startsWith("/ured")} />
+            <StaffTab href="/kuhinja" label={t.staffKitchen} active={path.startsWith("/kuhinja")} />
+            <StaffTab href="/vozac" label={t.staffDriver} active={path.startsWith("/vozac")} />
+          </nav>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-dvh bg-black text-white">
+      <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-[#3E3A37]">
+        {!menuScreen && (
+          <header className="sticky top-0 z-40 flex items-center justify-between bg-black px-3 py-2">
+            <Link href="/">
+              <Image src="/logo.png" alt={t.brand} width={400} height={114} className="h-11 w-auto" priority />
+            </Link>
+            <button
+              type="button"
+              onClick={() => setLocale(locale === "hr" ? "en" : "hr")}
+              className="min-h-11 rounded-full border border-white/70 px-3 text-[11px] font-semibold"
+              aria-label={locale === "hr" ? t.switchToEn : t.switchToHr}
+            >
+              {locale === "hr" ? "HR" : "EN"}
+            </button>
+          </header>
+        )}
+        <main className="flex-1">{children}</main>
+        <nav className="sticky bottom-0 z-40 grid grid-cols-5 border-t border-white/15 bg-black pb-[env(safe-area-inset-bottom)]">
+          <Tab href="/" label={t.brand} active={path === "/"} icon="home" />
+          <Tab href="/jelovnik" label={t.navMenu} active={path.startsWith("/jelovnik")} icon="menu" />
+          <Tab href="/rute" label={t.navRoutes} active={path.startsWith("/rute")} icon="routes" />
+          <Tab href="/kuca" label={t.navFamily} active={path.startsWith("/kuca")} icon="house" />
           <button
             type="button"
             onClick={() => setCartOpen(true)}
-            className="relative flex min-h-14 flex-col items-center justify-center gap-0.5 px-1 text-[10px] font-semibold text-white/80"
+            className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 px-1 text-[10px] font-semibold ${
+              path.startsWith("/blagajna") ? "text-[#f0c94a]" : "text-white/80"
+            }`}
           >
             <TabIcon name="cart" />
             {t.cart}
@@ -43,101 +84,20 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </nav>
         {cartOpen && <CartDrawer />}
       </div>
-    );
-  }
-
-  return (
-    <div className="relative z-10 min-h-full flex flex-col">
-      <FoodCollage />
-      <header className="sticky top-0 z-40 border-b border-white/15 bg-black/55 backdrop-blur-md pt-[env(safe-area-inset-top)]">
-        <div className="mx-auto flex max-w-6xl items-center gap-2 px-3 py-2 sm:gap-4 sm:px-4 sm:py-3">
-          <Link href="/" className="flex shrink-0 items-center">
-            <Image src="/logo-light.png" alt="MP Stina" width={160} height={50} className="h-8 w-auto sm:h-10" priority />
-          </Link>
-          <nav className="ml-auto hidden items-center gap-6 text-sm font-medium sm:flex">
-            {links.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={path === l.href ? "text-[var(--gold)]" : "text-white/80 hover:text-white"}
-              >
-                {l.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="ml-auto flex items-center gap-2 sm:ml-4">
-            <button
-              type="button"
-              onClick={() => setLocale(locale === "hr" ? "en" : "hr")}
-              className="min-h-10 rounded-full border border-white/30 px-3 py-2 text-xs font-semibold tracking-wide text-white"
-              aria-label={locale === "hr" ? "Switch to English" : "Prebaci na hrvatski"}
-            >
-              {locale === "hr" ? "HR · EN" : "EN · HR"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setCartOpen(true)}
-              className="relative hidden min-h-10 rounded-full bg-[var(--terracotta)] px-4 py-2 text-sm font-semibold text-white sm:inline-flex sm:items-center"
-            >
-              {t.cart}
-              {count > 0 && (
-                <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-[var(--ink)] px-1 text-[11px] text-[var(--paper)]">
-                  {count}
-                </span>
-              )}
-            </button>
-          </div>
-        </div>
-      </header>
-      <main className="relative z-10 flex-1 pb-28 sm:pb-0">{children}</main>
-      <div className="relative z-10 px-4 pb-6 text-center text-xs leading-6 text-white/70 sm:hidden">
-        <p>{t.footerPhone}</p>
-        <p>{t.footerMail}</p>
-        <p>{t.footerAddr}</p>
-        <Link href="/kuhinja" className="mt-2 inline-block underline decoration-[var(--gold)] underline-offset-4">
-          {t.navKitchen}
-        </Link>
-      </div>
-      <footer className="relative z-10 mt-10 hidden border-t border-white/15 bg-black/50 backdrop-blur-md sm:mt-16 sm:block">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-3">
-          <div>
-            <p className="font-serif text-2xl text-white">{t.brand}</p>
-            <p className="mt-1 text-sm text-white/75">{t.tagline}</p>
-          </div>
-          <div className="text-sm leading-7 text-white/85">
-            <p>{t.footerPhone}</p>
-            <p>{t.footerMail}</p>
-            <p>{t.footerAddr}</p>
-          </div>
-          <div className="text-sm text-white/75">
-            <Link href="/kuhinja" className="underline decoration-[var(--gold)] underline-offset-4">
-              {t.navKitchen}
-            </Link>
-            <p className="mt-3">{t.cutoff}</p>
-          </div>
-        </div>
-      </footer>
-      <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-white/15 bg-black/80 pb-[env(safe-area-inset-bottom)] backdrop-blur-md sm:hidden">
-        <Tab href="/" label={t.brand} active={path === "/"} icon="home" />
-        <Tab href="/jelovnik" label={t.navMenu} active={path.startsWith("/jelovnik")} icon="menu" />
-        <Tab href="/rute" label={t.navRoutes} active={path.startsWith("/rute")} icon="routes" />
-        <Tab href="/kuca" label={t.navFamily} active={path.startsWith("/kuca")} icon="house" />
-        <button
-          type="button"
-          onClick={() => setCartOpen(true)}
-          className="relative flex min-h-14 flex-col items-center justify-center gap-0.5 px-1 text-[10px] font-semibold text-white/80"
-        >
-          <TabIcon name="cart" />
-          {t.cart}
-          {count > 0 && (
-            <span className="absolute right-1.5 top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-[var(--terracotta)] px-1 text-[10px] text-white">
-              {count}
-            </span>
-          )}
-        </button>
-      </nav>
-      {cartOpen && <CartDrawer />}
     </div>
+  );
+}
+
+function StaffTab({ href, label, active }: { href: string; label: string; active: boolean }) {
+  return (
+    <Link
+      href={href}
+      className={`flex min-h-14 items-center justify-center px-1 text-center text-[12px] font-semibold ${
+        active ? "text-[#f0c94a]" : "text-white/75"
+      }`}
+    >
+      {label}
+    </Link>
   );
 }
 
@@ -156,7 +116,7 @@ function Tab({
     <Link
       href={href}
       className={`flex min-h-14 flex-col items-center justify-center gap-0.5 px-1 text-center text-[10px] font-semibold leading-tight ${
-        active ? "text-[var(--gold)]" : "text-white/80"
+        active ? "text-[#f0c94a]" : "text-white/80"
       }`}
     >
       <TabIcon name={icon} />
@@ -212,49 +172,47 @@ function TabIcon({ name }: { name: "home" | "menu" | "routes" | "house" | "cart"
 function CartDrawer() {
   const { t, items, setQty, locale, subtotal, setCartOpen } = useStore();
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/50" onClick={() => setCartOpen(false)}>
+    <div className="fixed inset-0 z-50 flex justify-center bg-black/50" onClick={() => setCartOpen(false)}>
       <aside
-        className="flex h-full w-full max-w-md flex-col overflow-y-auto bg-[#1a1410] p-5 text-white shadow-2xl sm:p-6 pt-[max(1.25rem,env(safe-area-inset-top))] pb-[max(1.25rem,env(safe-area-inset-bottom))]"
+        className="h-full w-full max-w-[430px] overflow-y-auto bg-[#14110e] p-6 text-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
           <h2 className="font-serif text-3xl">{t.cart}</h2>
-          <button type="button" onClick={() => setCartOpen(false)} className="grid h-11 w-11 place-items-center rounded-full bg-white/10 text-lg">
+          <button type="button" onClick={() => setCartOpen(false)} className="grid h-11 w-11 place-items-center rounded-full bg-white/10">
             ✕
           </button>
         </div>
         {items.length === 0 ? (
           <p className="mt-8 text-white/70">{t.emptyCart}</p>
         ) : (
-          <ul className="mt-6 flex-1 space-y-4">
+          <ul className="mt-6 space-y-4">
             {items.map((i) => (
-              <li key={i.key} className="flex flex-col gap-3 border-b border-white/15 pb-4 sm:flex-row sm:gap-3">
+              <li key={i.key} className="flex gap-3 border-b border-white/15 pb-4">
                 <div className="flex-1">
                   <p className="font-medium">{locale === "hr" ? i.dish.hr : i.dish.en}</p>
-                  <p className="text-xs text-white/60">
+                  <p className="text-xs text-white/55">
                     {week.find((d) => d.date === i.date)
                       ? new Date(`${i.date}T12:00:00`).toLocaleDateString(locale === "hr" ? "hr-HR" : "en-GB")
                       : i.date}
                   </p>
                 </div>
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <button type="button" className="qty" onClick={() => setQty(i.key, i.qty - 1)}>
-                      −
-                    </button>
-                    <span className="w-6 text-center">{i.qty}</span>
-                    <button type="button" className="qty" onClick={() => setQty(i.key, i.qty + 1)}>
-                      +
-                    </button>
-                  </div>
-                  <p className="font-medium">{formatPrice(i.dish.price * i.qty)}</p>
+                <div className="flex items-center gap-2">
+                  <button type="button" className="qty text-white" onClick={() => setQty(i.key, i.qty - 1)}>
+                    −
+                  </button>
+                  <span className="w-6 text-center">{i.qty}</span>
+                  <button type="button" className="qty text-white" onClick={() => setQty(i.key, i.qty + 1)}>
+                    +
+                  </button>
                 </div>
+                <p className="w-16 text-right font-medium">{formatPrice(i.dish.price * i.qty)}</p>
               </li>
             ))}
           </ul>
         )}
         {items.length > 0 && (
-          <div className="mt-auto border-t border-white/15 pt-4">
+          <div className="mt-6 pb-[env(safe-area-inset-bottom)]">
             <p className="flex justify-between text-lg">
               <span>{t.total}</span>
               <span>{formatPrice(subtotal)}</span>
@@ -262,7 +220,7 @@ function CartDrawer() {
             <Link
               href="/blagajna"
               onClick={() => setCartOpen(false)}
-              className="mt-4 block min-h-12 rounded-full bg-[var(--terracotta)] py-3 text-center font-semibold text-white"
+              className="mt-4 block min-h-12 rounded-md bg-[#d85a38] py-3 text-center font-semibold text-white"
             >
               {t.checkout}
             </Link>

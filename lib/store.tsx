@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { DOOR_FEE, routes, type Dish } from "./data";
+import { DEMO_SEED_VERSION, buildDemoOrders, isDemoId } from "./demo-orders";
 import { copy, type Locale } from "./i18n";
 
 export type CartItem = {
@@ -20,16 +21,17 @@ export type CartItem = {
 };
 
 export type Delivery =
-  | { type: "stop"; routeId: string }
+  | { type: "stop"; routeId: string; address?: string }
   | { type: "door"; routeId: string; address: string };
 
-export type PayMethod = "card" | "cash" | "invoice";
+export type PayMethod = "cash" | "keks" | "invoice";
 
 export type OrderStatus = "new" | "packed" | "out" | "done";
 
 export type KitchenOrder = {
   id: string;
   createdAt: string;
+  serveDate: string;
   name: string;
   phone: string;
   email: string;
@@ -59,8 +61,9 @@ type Store = {
   deliveryFee: number;
   total: number;
   orders: KitchenOrder[];
-  placeOrder: (input: Omit<KitchenOrder, "id" | "createdAt" | "status" | "items"> & { items?: CartItem[] }) => KitchenOrder;
+  placeOrder: (input: Omit<KitchenOrder, "id" | "createdAt" | "status" | "items" | "serveDate"> & { items?: CartItem[]; serveDate?: string }) => KitchenOrder;
   updateOrder: (id: string, patch: Partial<KitchenOrder>) => void;
+  resetDemo: () => void;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -68,6 +71,7 @@ const Ctx = createContext<Store | null>(null);
 const CART_KEY = "stina-cart";
 const LANG_KEY = "stina-lang";
 const ORDERS_KEY = "stina-orders";
+const SEED_KEY = "stina-seed";
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("hr");
@@ -84,7 +88,21 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const raw = localStorage.getItem(CART_KEY);
       if (raw) setItems(JSON.parse(raw) as CartItem[]);
       const o = localStorage.getItem(ORDERS_KEY);
-      if (o) setOrders(JSON.parse(o) as KitchenOrder[]);
+      const parsed = o ? (JSON.parse(o) as KitchenOrder[]) : [];
+      const live = parsed
+        .filter((ord) => !isDemoId(ord.id))
+        .map((ord) => ({
+          ...ord,
+          serveDate: ord.serveDate || ord.items[0]?.date || ord.createdAt.slice(0, 10),
+        }));
+      const seeded = localStorage.getItem(SEED_KEY);
+      if (seeded !== DEMO_SEED_VERSION) {
+        localStorage.setItem(SEED_KEY, DEMO_SEED_VERSION);
+        setOrders([...buildDemoOrders(), ...live]);
+      } else {
+        const demo = parsed.some((ord) => isDemoId(ord.id)) ? parsed.filter((ord) => isDemoId(ord.id)) : buildDemoOrders();
+        setOrders([...demo, ...live]);
+      }
     } catch {
       /* ignore */
     }
@@ -98,6 +116,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!ready) return;
+    if (orders.length === 0) {
+      try {
+        const prev = JSON.parse(localStorage.getItem(ORDERS_KEY) || "[]") as KitchenOrder[];
+        if (prev.length > 0) return;
+      } catch {
+        /* ignore */
+      }
+    }
     localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
   }, [orders, ready]);
 
@@ -131,11 +157,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const placeOrder: Store["placeOrder"] = useCallback(
     (input) => {
+      const lineItems = input.items ?? items;
       const order: KitchenOrder = {
         id: `ST-${Date.now().toString(36).toUpperCase()}`,
         createdAt: new Date().toISOString(),
+        serveDate: input.serveDate || lineItems[0]?.date || new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Zagreb" }),
         status: "new",
-        items: input.items ?? items,
+        items: lineItems,
         name: input.name,
         phone: input.phone,
         email: input.email,
@@ -157,6 +185,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, ...patch } : o)));
   }, []);
 
+  const resetDemo = useCallback(() => {
+    const live = orders.filter((o) => !isDemoId(o.id));
+    localStorage.setItem(SEED_KEY, DEMO_SEED_VERSION);
+    setOrders([...buildDemoOrders(), ...live]);
+  }, [orders]);
+
   const value = useMemo(
     () => ({
       locale,
@@ -176,6 +210,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       orders,
       placeOrder,
       updateOrder,
+      resetDemo,
     }),
     [
       locale,
@@ -192,6 +227,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       orders,
       placeOrder,
       updateOrder,
+      resetDemo,
     ],
   );
 

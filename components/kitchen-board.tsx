@@ -47,7 +47,7 @@ export function KitchenBoard() {
 
   return (
     <div className="space-y-10">
-      <form onSubmit={addPhone} className="panel rounded-3xl p-5 print:hidden">
+      <form onSubmit={addPhone} className="rounded-3xl bg-white/80 p-5 ring-1 ring-[var(--line)] print:hidden">
         <h2 className="font-serif text-2xl">{t.addPhoneOrder}</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <input className="field" placeholder={t.name} value={name} onChange={(e) => setName(e.target.value)} />
@@ -69,7 +69,7 @@ export function KitchenBoard() {
               ))}
           </select>
         </div>
-        <button type="submit" className="mt-4 min-h-12 rounded-full bg-[var(--ink)] px-5 py-2 text-sm font-semibold text-[var(--paper)]">
+        <button type="submit" className="mt-4 rounded-full bg-[var(--ink)] px-5 py-2 text-sm font-semibold text-[var(--paper)]">
           {t.add}
         </button>
       </form>
@@ -82,21 +82,21 @@ export function KitchenBoard() {
       </div>
 
       {orders.length === 0 ? (
-        <p className="text-white/70">{t.noOrders}</p>
+        <p className="text-[var(--ink-soft)]">{t.noOrders}</p>
       ) : (
         <div className="grid gap-6 lg:grid-cols-2">
           {routes.map((r) => {
             const list = grouped.get(r.id) ?? [];
             if (!list.length) return null;
             return (
-              <section key={r.id} className="panel rounded-3xl p-5">
+              <section key={r.id} className="rounded-3xl bg-[var(--linen)] p-5 ring-1 ring-[var(--line)]">
                 <header className="flex items-baseline justify-between gap-3">
                   <h3 className="font-serif text-2xl">{locale === "hr" ? r.hr : r.en}</h3>
-                  <span className="text-sm text-white/65">{r.window}</span>
+                  <span className="text-sm text-[var(--ink-soft)]">{r.window}</span>
                 </header>
                 <ul className="mt-4 space-y-4">
                   {list.map((o) => (
-                    <li key={o.id} className="rounded-2xl bg-black/35 p-4">
+                    <li key={o.id} className="rounded-2xl bg-white p-4">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <p className="font-semibold">
                           {o.name} · {o.phone}
@@ -113,9 +113,9 @@ export function KitchenBoard() {
                       {o.delivery.type === "door" && (
                         <p className="mt-1 text-sm text-[var(--terracotta)]">{o.delivery.address}</p>
                       )}
-                      {o.note && <p className="mt-1 text-sm text-white/65">{o.note}</p>}
+                      {o.note && <p className="mt-1 text-sm text-[var(--ink-soft)]">{o.note}</p>}
                       <p className="mt-2 text-sm">
-                        {o.pay === "card" ? t.paid : o.pay === "cash" ? t.cash : t.invoice} ·{" "}
+                        {o.pay === "keks" ? t.payKeks : o.pay === "cash" ? t.payCash : t.payInvoice} ·{" "}
                         {formatPrice(o.items.reduce((s, i) => s + i.dish.price * i.qty, 0) + (o.delivery.type === "door" ? 1.5 : 0))}
                       </p>
                       <div className="mt-3 flex flex-wrap gap-2 print:hidden">
@@ -125,7 +125,7 @@ export function KitchenBoard() {
                             type="button"
                             onClick={() => updateOrder(o.id, { status: s })}
                             className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                              o.status === s ? "bg-[var(--olive)] text-white" : "bg-white/10 text-white"
+                              o.status === s ? "bg-[var(--olive)] text-white" : "bg-[var(--cream)]"
                             }`}
                           >
                             {s === "new" ? t.statusNew : s === "packed" ? t.packed : s === "out" ? t.out : t.done}

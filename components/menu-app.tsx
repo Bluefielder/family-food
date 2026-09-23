@@ -40,7 +40,7 @@ export function MenuApp() {
   );
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-[#3E3A37] pb-24 text-white">
+    <div className="flex w-full flex-col bg-[#3E3A37] pb-4 text-white">
       <header className="relative bg-black">
         <div className="relative aspect-[1024/218] w-full overflow-hidden">
           <Image
@@ -58,7 +58,7 @@ export function MenuApp() {
               type="button"
               onClick={() => setLocale(locale === "hr" ? "en" : "hr")}
               className="min-h-8 rounded-full border border-white/70 px-3 text-[11px] font-semibold tracking-wide"
-              aria-label={locale === "hr" ? "Switch to English" : "Prebaci na hrvatski"}
+              aria-label={locale === "hr" ? t.switchToEn : t.switchToHr}
             >
               {locale === "hr" ? "HR" : "ENG"}
             </button>
@@ -113,7 +113,7 @@ export function MenuApp() {
       <ul className="flex-1 divide-y divide-white/10 bg-[#3E3A37] px-4">
         {dishes.length === 0 && (
           <li className="py-10 text-center text-sm text-white/55">
-            {locale === "hr" ? "Nema jela u ovoj skupini." : "Nothing in this group today."}
+            {t.emptyGroup}
           </li>
         )}
         {dishes.map((dish) => (
@@ -125,8 +125,9 @@ export function MenuApp() {
 }
 
 function DishRow({ dish, date }: { dish: Dish; date: string }) {
-  const { locale, items, add } = useStore();
-  const qty = items.find((i) => i.key === `${date}:${dish.id}`)?.qty ?? 0;
+  const { locale, items, add, setQty } = useStore();
+  const key = `${date}:${dish.id}`;
+  const qty = items.find((i) => i.key === key)?.qty ?? 0;
   const name = locale === "hr" ? dish.hr : dish.en;
   const note = locale === "hr" ? dish.noteHr : dish.noteEn;
 
@@ -136,17 +137,35 @@ function DishRow({ dish, date }: { dish: Dish; date: string }) {
         <p className="dish-name text-[20px] text-white">{name}</p>
         {note && <p className="mt-0.5 truncate text-xs text-white/50">{note}</p>}
       </div>
-      <button
-        type="button"
-        onClick={() => add(date, dish)}
-        className={`relative min-w-[5.25rem] shrink-0 rounded-md px-3.5 py-2 text-[20px] font-semibold tabular-nums ${
-          qty > 0 ? "bg-[#f0c94a] text-black" : "bg-[#3dcc4a] text-white"
-        }`}
-        aria-label={qty > 0 ? `${qty}× ${chipPrice(dish.price)}` : chipPrice(dish.price)}
-      >
-        {qty > 0 && <span className="mr-1">{qty}×</span>}
-        {chipPrice(dish.price)}
-      </button>
+      {qty > 0 ? (
+        <div className="flex shrink-0 overflow-hidden rounded-md bg-[#f0c94a] text-black">
+          <button
+            type="button"
+            onClick={() => setQty(key, qty - 1)}
+            className="grid min-h-11 min-w-11 place-items-center text-[22px] font-semibold"
+            aria-label={locale === "hr" ? "Ukloni jedno" : "Remove one"}
+          >
+            −
+          </button>
+          <button
+            type="button"
+            onClick={() => add(date, dish)}
+            className="min-h-11 min-w-[5.25rem] px-3 text-[20px] font-semibold tabular-nums"
+            aria-label={`${qty}× ${chipPrice(dish.price)}`}
+          >
+            {qty}× {chipPrice(dish.price)}
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => add(date, dish)}
+          className="min-h-11 min-w-[5.25rem] shrink-0 rounded-md bg-[#3dcc4a] px-3.5 text-[20px] font-semibold tabular-nums text-white"
+          aria-label={chipPrice(dish.price)}
+        >
+          {chipPrice(dish.price)}
+        </button>
+      )}
     </li>
   );
 }
